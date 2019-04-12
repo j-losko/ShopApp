@@ -6,11 +6,41 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 type Props = {};
 export default class Catalog extends Component<Props> {
+  static options(passProps) {
+    return {
+      topBar: {
+        title: {
+          text: 'Katalog produktów'
+        },
+        rightButtons: [
+          {
+            id: 'buttonShoppingCart',
+            icon: require('../assets/placeholder.png')
+          }
+        ],
+      }
+    };
+  }
+
+  navigationButtonPressed({ buttonId }) {
+    // will be called when "buttonShoppingCart" is clicked
+	alert('He PROTECC she ATACC, a Hero and a RACC, they got each others BACC');
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'ShoppingCart',
+        passProps: {
+          text: 'pass props if you want to'
+        },
+      }
+    });
+  }
+ 
   constructor(props) {
     super(props);
-      this.state = {
+    Navigation.events().bindComponent(this); // <== Will be automatically unregistered when unmounted
+    this.state = {
       refreshing: false,
-      dataSource: ds.cloneWithRows([{userId: '', id: '', title: '', completed: ''}])
+      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}])
     };
   }
 
@@ -25,19 +55,19 @@ export default class Catalog extends Component<Props> {
     });
   }
 
-  fetchData = async() => {
-    try {
-      let response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
-      let responseJson = await response.json();
-      this.setState({ dataSource: ds.cloneWithRows(responseJson) });
-    } catch (error) {
-      alert('Błąd podczas pobierania danych.\nSprawdź połączenie z internetem!');
-    }
+  fetchData = () => {
+    fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(response => response.json())
+    .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
+    .catch((error) => {
+      alert('Błąd podczas wysyłania wyniku.\nSprawdź połączenie z internetem!');
+    });
   }
 
   render() {
     return (
       <View style={styles.container}>
+	  <Text>Tu będzie szukaj</Text>
       <ListView
           dataSource={this.state.dataSource}
           renderRow={(data) =>
@@ -66,10 +96,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+	margin: 30,
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
   },
+  column: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'black',
+    textAlign: 'center'
+  }
 });

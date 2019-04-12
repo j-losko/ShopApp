@@ -4,6 +4,20 @@ import {Navigation} from 'react-native-navigation';
 
 type Props = {};
 export default class ShoppingCart extends Component<Props> {
+  static options(passProps) {
+    return {
+      topBar: {
+        title: {
+          text: 'Koszyk'
+        }
+      }
+    };
+  }
+  
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <View style={styles.container}>

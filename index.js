@@ -26,11 +26,18 @@ Navigation.events().registerAppLaunchedListener(() => {
 	  children: [
 		{
 		  component: {
-              name: 'Home',
-              passProps: {
-                text: 'This is tab 1'
+            name: 'Home',
+			options: {
+              topBar: {
+                title: {
+                  text: 'Home'
+                },
               }
+            },
+            passProps: {
+              text: 'props'
             }
+          }
 		}
 	  ],
 	}

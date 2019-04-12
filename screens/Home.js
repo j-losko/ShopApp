@@ -4,20 +4,20 @@ import {Navigation} from 'react-native-navigation';
 
 type Props = {};
 export default class App extends Component<Props> {
-  goToScreen = (screenName, screenNameTopBar) => {
+  goToScreen = (screenName) => {
     Navigation.push(this.props.componentId, {
       component: {
         name: screenName,
         passProps: {
-          text: 'Pushed screen'
+          text: 'jakieś propsy możesz pasować'
         },
-        options: {
+        /*options: {
           topBar: {
             title: {
               text: screenNameTopBar
-            }
+            },
           }
-        }
+        }*/
       }
     });
   }
@@ -25,18 +25,26 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.goToScreen('Catalog','Katalog produktów')}>
-          <Text>Katalog produktów</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.goToScreen('ShoppingCart','Koszyk')}>
-          <Text>Koszyk</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.goToScreen('Orders','Złożone zamówienia')}>
-          <Text>Złożone zamówienia</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => BackHandler.exitApp()}>
-          <Text>Wyjdź</Text>
-        </TouchableOpacity>
+        <View style={styles.button}>
+          <TouchableOpacity onPress={() => this.goToScreen('Catalog')}>
+            <Text style={styles.buttonText}>Katalog produktów</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.button}>
+          <TouchableOpacity onPress={() => this.goToScreen('ShoppingCart')}>
+            <Text style={styles.buttonText}>Koszyk</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.button}>
+          <TouchableOpacity onPress={() => this.goToScreen('Orders')}>
+            <Text style={styles.buttonText}>Złożone zamówienia</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.button}>
+          <TouchableOpacity onPress={() => BackHandler.exitApp()}>
+            <Text style={styles.buttonText}>Wyjdź</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -45,8 +53,8 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'stretch',
     backgroundColor: '#F5FCFF',
   },
   welcome: {
@@ -55,10 +63,12 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   button: {
-    height: 20,
-    width: 50,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+	backgroundColor: '#ABCABC',
   },
   buttonText: {
-	fontSize: 50
+    textAlign: 'center',
+	fontSize: 12,
   }
 });

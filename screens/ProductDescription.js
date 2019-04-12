@@ -4,6 +4,20 @@ import {Navigation} from 'react-native-navigation';
 
 type Props = {};
 export default class ProductDescription extends Component<Props> {
+  static options(passProps) {
+    return {
+      topBar: {
+        title: {
+          text: 'Opis produktu'
+        }
+      }
+    };
+  }
+  
+  constructor(props) {
+    super(props);
+  }
+  
   render() {
     return (
       <View style={styles.container}>
