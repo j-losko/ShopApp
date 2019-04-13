@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, BackHandler} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View, BackHandler} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 type Props = {};
@@ -7,17 +7,7 @@ export default class App extends Component<Props> {
   goToScreen = (screenName) => {
     Navigation.push(this.props.componentId, {
       component: {
-        name: screenName,
-        passProps: {
-          text: 'jakieś propsy możesz pasować'
-        },
-        /*options: {
-          topBar: {
-            title: {
-              text: screenNameTopBar
-            },
-          }
-        }*/
+        name: screenName
       }
     });
   }
@@ -27,22 +17,34 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => this.goToScreen('Catalog')}>
-            <Text style={styles.buttonText}>Katalog produktów</Text>
+            <View style={styles.row}>
+              <Image source={require('../assets/catalog.png')}/>
+              <Text style={styles.buttonText}>Katalog produktów</Text>
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => this.goToScreen('ShoppingCart')}>
-            <Text style={styles.buttonText}>Koszyk</Text>
+            <View style={styles.row}>
+              <Image source={require('../assets/shoppingCart.png')}/>
+              <Text style={styles.buttonText}>Koszyk</Text>
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => this.goToScreen('Orders')}>
-            <Text style={styles.buttonText}>Złożone zamówienia</Text>
+            <View style={styles.row}>
+              <Image source={require('../assets/clipboard.png')}/>
+              <Text style={styles.buttonText}>Złożone zamówienia</Text>
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => BackHandler.exitApp()}>
-            <Text style={styles.buttonText}>Wyjdź</Text>
+            <View style={styles.row}>
+              <Image source={require('../assets/powerOff.png')}/>
+              <Text style={styles.buttonText}>Wyjdź</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -53,7 +55,7 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'stretch',
     backgroundColor: '#F5FCFF',
   },
@@ -65,10 +67,16 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'stretch',
     justifyContent: 'center',
-	backgroundColor: '#ABCABC',
+	backgroundColor: 'lightblue',
+	margin: 10,
   },
   buttonText: {
     textAlign: 'center',
-	fontSize: 12,
+	fontSize: 20,
+	padding: 25,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
   }
 });

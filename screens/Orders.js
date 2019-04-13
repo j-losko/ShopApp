@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, ListView, RefreshControl} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 type Props = {};
 export default class Orders extends Component<Props> {
@@ -16,13 +18,52 @@ export default class Orders extends Component<Props> {
   
   constructor(props) {
     super(props);
+    this.state = {
+      refreshing: false,
+      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}])
+    };
+  }
+  
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this.fetchData().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
+
+  fetchData = () => {
+    fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(response => response.json())
+    .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
+    .catch((error) => {
+      alert('Błąd podczas wysyłania wyniku.\nSprawdź połączenie z internetem!');
+    });
   }
   
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={(data) =>
+            <View style={styles.row}>
+              <Text style={styles.column}>{data.userId}</Text>
+              <Text style={styles.column}>{data.id}</Text>
+              <Text style={styles.column}>{data.title}</Text>
+              <Text style={styles.column}>{data.completed}</Text>
+            </View>
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        />
       </View>
     );
   }
@@ -40,4 +81,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
+  column: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'black',
+    textAlign: 'center'
+  }
 });

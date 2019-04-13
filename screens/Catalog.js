@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, ListView, RefreshControl} from 'react-native';
+import {Image, ListView, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -15,7 +15,9 @@ export default class Catalog extends Component<Props> {
         rightButtons: [
           {
             id: 'buttonShoppingCart',
-            icon: require('../assets/placeholder.png')
+            icon: {
+              uri: 'shoppingcart',
+            },
           }
         ],
       }
@@ -23,24 +25,20 @@ export default class Catalog extends Component<Props> {
   }
 
   navigationButtonPressed({ buttonId }) {
-    // will be called when "buttonShoppingCart" is clicked
-	alert('He PROTECC she ATACC, a Hero and a RACC, they got each others BACC');
     Navigation.push(this.props.componentId, {
       component: {
-        name: 'ShoppingCart',
-        passProps: {
-          text: 'pass props if you want to'
-        },
+        name: 'ShoppingCart'
       }
     });
   }
  
   constructor(props) {
     super(props);
-    Navigation.events().bindComponent(this); // <== Will be automatically unregistered when unmounted
+    Navigation.events().bindComponent(this);
     this.state = {
       refreshing: false,
-      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}])
+      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}]), //TODO nie pokazywanie tego przy braku internetu
+	  search: ''
     };
   }
 
@@ -55,36 +53,70 @@ export default class Catalog extends Component<Props> {
     });
   }
 
-  fetchData = () => {
+  fetchData = async() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
     .then(response => response.json())
     .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
     .catch((error) => {
-      alert('Błąd podczas wysyłania wyniku.\nSprawdź połączenie z internetem!');
+      alert('Błąd podczas pobierania katalogu produktów.\nSprawdź połączenie z internetem!');
+    });
+  }
+  
+  goToDescription = (props) => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'ProductDescription',
+        passProps: {
+          props: props
+        },
+      }
     });
   }
 
   render() {
     return (
       <View style={styles.container}>
-	  <Text>Tu będzie szukaj</Text>
-      <ListView
-          dataSource={this.state.dataSource}
-          renderRow={(data) =>
-            <View style={styles.row}>
-              <Text style={styles.column}>{data.userId}</Text>
-              <Text style={styles.column}>{data.id}</Text>
-              <Text style={styles.column}>{data.title}</Text>
-              <Text style={styles.column}>{data.completed}</Text>
-            </View>
-          }
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh}
-            />
-          }
-        />
+        <View style={{flex: 1}}>
+          <TextInput
+            placeholder='Szukaj produktu'
+            style={styles.searchInput}
+            onChangeText={(search) => this.setState({search})}
+            value={this.state.search}
+          />
+        </View>
+        <View style={{flex: 8, backgroundColor: '#F5FCFF'}}>
+          <ListView
+            dataSource={this.state.dataSource}
+            renderRow={(data) =>
+              <View style={styles.row}>
+                <View style={{flex: 3}}>
+                  <TouchableOpacity onPress={() => this.goToDescription('TODO - id tego produktu czy coś')}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{flex: 1}}>
+                        <Image style={styles.image} source={require('../assets/phone.png')}/>
+                      </View>
+                      <View style={{flex: 2, justifyContent: 'center'}}>
+                        <Text>{data.title}</Text>
+                        <Text>Cena: {data.id} zł</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                  <TouchableOpacity onPress={() => alert('Dodano do koszyka.')}>
+                    <Image source={require('../assets/add.png')} style={{height: 32, width: 32}}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            }
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
+          />
+        </View>
       </View>
     );
   }
@@ -94,19 +126,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-	margin: 30,
+    alignItems: 'stretch',
+	marginTop: 30,
+	marginHorizontal: 20,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  searchInput: {
+    height: 40,
+	borderColor: 'gray',
+	borderWidth: 1
   },
-  column: {
+  row: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: 'black',
-    textAlign: 'center'
+    flexDirection: 'row',
+    margin: 5,
+	backgroundColor: 'lightgray',
+	paddingVertical: 4,
+	borderWidth: 1,
+	borderColor: 'gray'
+  },
+  image: {
+    flex: 1,
+    width: 64,
+    height: 64,
+    resizeMode: 'contain'
   }
 });
