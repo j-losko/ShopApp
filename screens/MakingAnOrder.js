@@ -4,6 +4,20 @@ import {Navigation} from 'react-native-navigation';
 
 type Props = {};
 export default class MakingAnOrder extends Component<Props> {
+  static options(passProps) {
+    return {
+      topBar: {
+        title: {
+          text: 'Składanie zamówienia'
+        }
+      }
+    };
+  }
+  
+  constructor(props) {
+    super(props);
+  }
+  
   render() {
     return (
       <View style={styles.container}>

@@ -36,8 +36,9 @@ export default class ProductDescription extends Component<Props> {
         <View style={{flex: 1}}>
           <View>
             <TouchableOpacity onPress={() => alert('Dodajemy!')}>
-              <View>
-                <Text style={{backgroundColor: 'green', color: 'white', padding: 10}}>+ Dodaj do koszyka</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                <Image source={require('../assets/add.png')} style={{height: 32, width: 32}}/>
+                <Text style={{backgroundColor: '#1DFF00', color: 'white', padding: 10}}>Dodaj do koszyka</Text>
               </View>
             </TouchableOpacity>
           </View>
