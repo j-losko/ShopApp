@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, ListView, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {AsyncStorage, Image, ListView, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -53,6 +53,22 @@ export default class ShoppingCart extends Component<Props> {
         },
       }
     });
+  }
+  
+  addToShoppingCart = async(product) => {
+    try {
+      let shoppingCart;
+      const value = await AsyncStorage.getItem('shoppingCart');
+      if (value == null) {
+        shoppingCart = { contents:[] };
+      } else {
+		shoppingCart = JSON.parse(value);
+	  }
+	  shoppingCart.contents.push({'id':product});
+      await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+    } catch (error) {
+      alert('Błąd AsyncStorage koszyka!');
+    }
   }
 
   render() {
