@@ -33,7 +33,6 @@ export default class ShoppingCart extends Component<Props> {
     try {
       const value = await AsyncStorage.getItem('shoppingCart');
       this.setState({ dataSource: ds.cloneWithRows(JSON.parse(value).contents) });
-	  return;
     } catch (error) {}
   }
   
@@ -62,7 +61,20 @@ export default class ShoppingCart extends Component<Props> {
       component: {
         name: screen,
         passProps: {
-          props: props
+          product: props,
+        },
+      }
+    });
+  }
+
+  goToProductDetails = (screen, props) => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: screen,
+        passProps: {
+          product: props,
+		  showWhichButton: 'deleteFromShoppingCart',
+		  refreshCallback: () => this._onRefresh()
         },
       }
     });
@@ -84,7 +96,7 @@ export default class ShoppingCart extends Component<Props> {
             renderRow={(data) =>
               <View style={styles.row}>
                 <View style={{flex: 3}}>
-                  <TouchableOpacity onPress={() => this.goToScreen('ProductDescription', data)}>
+                  <TouchableOpacity onPress={() => this.goToProductDetails('ProductDescription', data)}>
                     <View style={{flexDirection: 'row'}}>
                       <View style={{flex: 1}}>
                         <Image style={styles.image} source={require('../assets/phone.png')}/>

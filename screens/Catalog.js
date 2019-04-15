@@ -68,7 +68,8 @@ export default class Catalog extends Component<Props> {
       component: {
         name: 'ProductDescription',
         passProps: {
-          props: props
+          product: {'id': props.title, 'name': props.title, 'price': props.id, 'description': props.title, 'image': 'placeholder'}, //placeholder
+		  showWhichButton: 'addToShoppingCart'
         },
       }
     });

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 type Props = {};
 export default class ProductDescription extends Component<Props> {
@@ -14,11 +15,57 @@ export default class ProductDescription extends Component<Props> {
     };
   }
   
-  constructor(props) { // TODO przyjmuje propsy z danymi produktu
+  constructor(props) {
     super(props);
   }
   
+  addToShoppingCart = async() => {
+    try {
+      let shoppingCart;
+      const value = await AsyncStorage.getItem('shoppingCart');
+      if (value == null) {
+        shoppingCart = { contents:[] };
+      } else {
+        shoppingCart = JSON.parse(value);
+      }
+      shoppingCart.contents.push(this.props.product);
+      await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+    } catch (error) {
+      alert('Błąd AsyncStorage koszyka!');
+    }
+  }
+  
+  removeFromShoppingCart = async() => {
+    try {
+      const value = await AsyncStorage.getItem('shoppingCart');
+      let shoppingCart = JSON.parse(value);
+      shoppingCart.contents.splice(this.props.product.id,1);
+      await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+      this.props.refreshCallback();
+      Navigation.pop(this.props.componentId);
+    } catch (error) {
+      alert('Błąd AsyncStorage koszyka!');
+    }
+  }
+  
   render() {
+    let button;
+    if(this.props.showWhichButton == 'addToShoppingCart') {
+      button = <TouchableOpacity onPress={() => this.addToShoppingCart()}>
+                 <View style={styles.buttonView}>
+                   <Image source={require('../assets/add.png')} style={styles.buttonImage}/>
+                   <Text style={styles.button}>Dodaj do koszyka</Text>
+                 </View>
+               </TouchableOpacity>;
+    } else {
+      button = <TouchableOpacity onPress={() => this.removeFromShoppingCart()}>
+                 <View style={styles.buttonView}>
+                   <Image source={require('../assets/trash.png')} style={styles.buttonImage}/>
+                   <Text style={styles.button}>Usuń z koszyka</Text>
+                 </View>
+               </TouchableOpacity>;
+    }
+  
     return (
       <View style={styles.container}>
         <View style={{flex: 3, flexDirection: 'row'}}>
@@ -26,21 +73,19 @@ export default class ProductDescription extends Component<Props> {
             <Image style={styles.image} source={require('../assets/phone.png')}/>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text>Nazwa produktu</Text>
-            <Text>Cena: 10,00 zł</Text>
+            <Text>{this.props.product.name}</Text>
+            <Text>Cena: {this.props.product.price} zł</Text>
           </View>
         </View>
         <View style={{flex: 3}}>
-          <View><Text>Opis:</Text><Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ut lacus tincidunt, consectetur ipsum vitae, ullamcorper nibh. Aliquam semper felis vel ipsum commodo ornare. Phasellus fermentum molestie magna, non ornare ante porttitor ut. Vestibulum quis quam et felis tincidunt dignissim. Mauris sodales, orci sed tincidunt euismod, leo ligula vestibulum justo, vitae tempor erat erat vel nulla. Sed efficitur ultrices vulputate. Nullam pellentesque convallis eros, vel maximus augue venenatis eleifend. Proin commodo massa ut odio gravida tincidunt. Morbi faucibus bibendum urna sit amet vehicula. Aliquam erat volutpat. Sed id cursus velit, vitae faucibus magna. Maecenas eget nisl sodales, imperdiet orci non, dignissim metus. </Text></View>
+          <View>
+            <Text>Opis:</Text>
+            <Text>{this.props.product.description}</Text>
+          </View>
         </View>
         <View style={{flex: 1}}>
           <View>
-            <TouchableOpacity onPress={() => alert('Dodajemy!')}>
-              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                <Image source={require('../assets/add.png')} style={{height: 32, width: 32}}/>
-                <Text style={{backgroundColor: '#1DFF00', color: 'white', padding: 10}}>Dodaj do koszyka</Text>
-              </View>
-            </TouchableOpacity>
+            {button}
           </View>
         </View>
       </View>
@@ -55,15 +100,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
   image: {
     flex: 1,
     width: undefined,
     height: undefined,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
+  },
+  button: {
+    backgroundColor: '#1DFF00',
+    color: 'white',
+    padding: 10,
+  },
+  buttonView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonImage: {
+    height: 32,
+    width: 32
   }
 });
