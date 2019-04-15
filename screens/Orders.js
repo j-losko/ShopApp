@@ -51,10 +51,9 @@ export default class Orders extends Component<Props> {
           dataSource={this.state.dataSource}
           renderRow={(data) =>
             <View style={styles.row}>
-              <Text style={styles.column}>{data.userId}</Text>
-              <Text style={styles.column}>{data.id}</Text>
-              <Text style={styles.column}>{data.title}</Text>
-              <Text style={styles.column}>{data.completed}</Text>
+              <Text style={styles.column}>Zamówienie nr: {data.id}</Text>
+              <Text style={styles.column}>Suma zamówienia: {data.id} zł</Text>
+              <Text style={styles.column}>Data zamówienia: {data.title}</Text>
             </View>
           }
           refreshControl={
@@ -75,16 +74,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    marginHorizontal: 30,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  column: {
-    flex: 1,
+  row: {
     borderWidth: 1,
-    borderColor: 'black',
-    textAlign: 'center'
+    borderColor: 'gray',
+    padding: 5,
+    marginVertical: 5,
   }
 });
