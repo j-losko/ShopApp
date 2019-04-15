@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {AsyncStorage, Image, ListView, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Image, ListView, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
