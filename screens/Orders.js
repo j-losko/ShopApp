@@ -20,7 +20,7 @@ export default class Orders extends Component<Props> {
     super(props);
     this.state = {
       refreshing: false,
-      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}])
+      dataSource: ds.cloneWithRows([{userId: 'placeholder', id: 'placeholder', title: 'placeholder', completed: false}]) //placeholder
     };
   }
   
@@ -51,9 +51,9 @@ export default class Orders extends Component<Props> {
           dataSource={this.state.dataSource}
           renderRow={(data) =>
             <View style={styles.row}>
-              <Text style={styles.column}>Zamówienie nr: {data.id}</Text>
-              <Text style={styles.column}>Suma zamówienia: {data.id} zł</Text>
-              <Text style={styles.column}>Data zamówienia: {data.title}</Text>
+              <Text>Zamówienie nr: {data.id}</Text>
+              <Text>Suma zamówienia: {data.id} zł</Text>
+              <Text>Data zamówienia: {data.title}</Text>
             </View>
           }
           refreshControl={
