@@ -39,7 +39,7 @@ export default class Catalog extends Component<Props> {
     this.state = {
       refreshing: false,
       dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}]), //TODO nie pokazywanie tego przy braku internetu - po prostu []
-	  search: ''
+      search: ''
     };
   }
 
@@ -69,7 +69,7 @@ export default class Catalog extends Component<Props> {
         name: 'ProductDescription',
         passProps: {
           product: {'id': props.title, 'name': props.title, 'price': props.id, 'description': props.title, 'image': 'placeholder'}, //placeholder
-		  showWhichButton: 'addToShoppingCart'
+          showWhichButton: 'addToShoppingCart'
         },
       }
     });
@@ -82,9 +82,9 @@ export default class Catalog extends Component<Props> {
       if (value == null) {
         shoppingCart = { contents:[] };
       } else {
-		shoppingCart = JSON.parse(value);
-	  }
-	  shoppingCart.contents.push({'id': product.title, 'name': product.title, 'price': product.id, 'description': product.title, 'image': 'placeholder'}); //id ma być w stringu
+        shoppingCart = JSON.parse(value);
+      }
+      shoppingCart.contents.push({'id': product.title, 'name': product.title, 'price': product.id, 'description': product.title, 'image': 'placeholder'}); //id ma być w stringu
       await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
     } catch (error) {
       alert('Błąd AsyncStorage koszyka!');
@@ -145,22 +145,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'stretch',
-	marginTop: 30,
-	marginHorizontal: 20,
+    marginTop: 30,
+    marginHorizontal: 20,
   },
   searchInput: {
     height: 40,
-	borderColor: 'gray',
-	borderWidth: 1
+    borderColor: 'gray',
+    borderWidth: 1
   },
   row: {
     flex: 1,
     flexDirection: 'row',
     margin: 5,
-	backgroundColor: 'lightgray',
-	paddingVertical: 4,
-	borderWidth: 1,
-	borderColor: 'gray'
+    backgroundColor: 'lightgray',
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: 'gray'
   },
   image: {
     flex: 1,

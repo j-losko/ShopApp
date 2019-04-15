@@ -67,13 +67,13 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'stretch',
     justifyContent: 'center',
-	backgroundColor: 'lightblue',
-	margin: 10,
+    backgroundColor: 'lightblue',
+    margin: 10,
   },
   buttonText: {
     textAlign: 'center',
-	fontSize: 20,
-	padding: 25,
+    fontSize: 20,
+    padding: 25,
   },
   row: {
     flexDirection: 'row',

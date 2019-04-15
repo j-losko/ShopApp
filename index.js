@@ -3,7 +3,6 @@
  */
 
 import {Navigation} from 'react-native-navigation';
-import App from './App';
 import Home from './screens/Home';
 import Catalog from './screens/Catalog';
 import MakingAnOrder from './screens/MakingAnOrder';
@@ -11,7 +10,6 @@ import Orders from './screens/Orders';
 import ProductDescription from './screens/ProductDescription';
 import ShoppingCart from './screens/ShoppingCart';
 
-Navigation.registerComponent(`navigation.playground.WelcomeScreen`, () => App);
 Navigation.registerComponent(`Home`, () => Home);
 Navigation.registerComponent(`Catalog`, () => Catalog);
 Navigation.registerComponent(`MakingAnOrder`, () => MakingAnOrder);
@@ -23,11 +21,11 @@ Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
   root: {
     stack: {
-	  children: [
-		{
-		  component: {
+      children: [
+        {
+          component: {
             name: 'Home',
-			options: {
+            options: {
               topBar: {
                 title: {
                   text: 'Home'
@@ -38,9 +36,9 @@ Navigation.events().registerAppLaunchedListener(() => {
               text: 'props'
             }
           }
-		}
-	  ],
-	}
+        }
+      ],
+    }
   }
 });
 });

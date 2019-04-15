@@ -19,7 +19,7 @@ export default class ShoppingCart extends Component<Props> {
   
   constructor(props) {
     super(props);
-	this.state = {
+    this.state = {
       refreshing: false,
       dataSource: ds.cloneWithRows([]),
     };
@@ -39,11 +39,11 @@ export default class ShoppingCart extends Component<Props> {
   removeFromShoppingCart = async(id) => {
     try {
       const value = await AsyncStorage.getItem('shoppingCart');
-	  let shoppingCart = JSON.parse(value);
-	  shoppingCart.contents.splice(id,1);
-	  //shoppingCart = { contents:[] };
+      let shoppingCart = JSON.parse(value);
+      shoppingCart.contents.splice(id,1);
+      //shoppingCart = { contents:[] };
       await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
-	  this._onRefresh();
+      this._onRefresh();
     } catch (error) {
       alert('Błąd AsyncStorage koszyka!');
     }
@@ -73,21 +73,22 @@ export default class ShoppingCart extends Component<Props> {
         name: screen,
         passProps: {
           product: props,
-		  showWhichButton: 'deleteFromShoppingCart',
-		  refreshCallback: () => this._onRefresh()
+          showWhichButton: 'deleteFromShoppingCart',
+          refreshCallback: () => this._onRefresh()
         },
       }
     });
   }
 
   render() {
-	if(this.state.dataSource._dataBlob.s1.length < 1) {
-	  return (
-		<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-		  <Text>Koszyk jest pusty</Text>
-		</View>
-		);
-	}
+    if(this.state.dataSource._dataBlob.s1.length < 1) {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text>Koszyk jest pusty</Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={{flex: 7, backgroundColor: '#F5FCFF'}}>
@@ -125,7 +126,7 @@ export default class ShoppingCart extends Component<Props> {
         </View>
         <View style={{flex: 2}}>
           <Text>Suma zamówienia:</Text>
-		  <TouchableOpacity onPress={() => this.goToScreen('MakingAnOrder', 'propsy jakieś')}>
+          <TouchableOpacity onPress={() => this.goToScreen('MakingAnOrder', 'propsy jakieś')}>
             <Text style={{padding: 10, backgroundColor: 'green'}}>Dalej</Text>
           </TouchableOpacity>
         </View>
@@ -139,17 +140,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'stretch',
-	marginTop: 30,
-	marginHorizontal: 20,
+    marginTop: 30,
+    marginHorizontal: 20,
   },
     row: {
     flex: 1,
     flexDirection: 'row',
     margin: 5,
-	backgroundColor: 'lightgray',
-	paddingVertical: 4,
-	borderWidth: 1,
-	borderColor: 'gray'
+    backgroundColor: 'lightgray',
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: 'gray'
   },
   image: {
     flex: 1,
