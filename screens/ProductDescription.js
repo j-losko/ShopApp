@@ -14,7 +14,7 @@ export default class ProductDescription extends Component<Props> {
     };
   }
   
-  constructor(props) {
+  constructor(props) { // TODO przyjmuje propsy z danymi produktu
     super(props);
   }
   

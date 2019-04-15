@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, ListView, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {AsyncStorage, Image, ListView, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -37,7 +37,7 @@ export default class Catalog extends Component<Props> {
     Navigation.events().bindComponent(this);
     this.state = {
       refreshing: false,
-      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}]), //TODO nie pokazywanie tego przy braku internetu
+      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}]), //TODO nie pokazywanie tego przy braku internetu - po prostu []
 	  search: ''
     };
   }
@@ -72,7 +72,23 @@ export default class Catalog extends Component<Props> {
       }
     });
   }
-
+  
+  addToShoppingCart = async(product) => {
+    try {
+      let shoppingCart;
+      const value = await AsyncStorage.getItem('shoppingCart');
+      if (value == null) {
+        shoppingCart = { contents:[] };
+      } else {
+		shoppingCart = JSON.parse(value);
+	  }
+	  shoppingCart.contents.push({'id': product.title, 'name': product.title, 'price': product.id, 'description': product.title, 'image': 'placeholder'}); //id ma być w stringu
+      await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+    } catch (error) {
+      alert('Błąd AsyncStorage koszyka!');
+    }
+  }
+  
   render() {
     return (
       <View style={styles.container}>
@@ -90,7 +106,7 @@ export default class Catalog extends Component<Props> {
             renderRow={(data) =>
               <View style={styles.row}>
                 <View style={{flex: 3}}>
-                  <TouchableOpacity onPress={() => this.goToDescription('TODO - id tego produktu czy coś')}>
+                  <TouchableOpacity onPress={() => this.goToDescription(data)}>
                     <View style={{flexDirection: 'row'}}>
                       <View style={{flex: 1}}>
                         <Image style={styles.image} source={require('../assets/phone.png')}/>
@@ -103,7 +119,7 @@ export default class Catalog extends Component<Props> {
                   </TouchableOpacity>
                 </View>
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                  <TouchableOpacity onPress={() => alert('Dodano do koszyka.')}>
+                  <TouchableOpacity onPress={() => this.addToShoppingCart(data)}>
                     <Image source={require('../assets/add.png')} style={{height: 32, width: 32}}/>
                   </TouchableOpacity>
                 </View>

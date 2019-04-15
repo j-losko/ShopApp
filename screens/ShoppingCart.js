@@ -20,58 +20,61 @@ export default class ShoppingCart extends Component<Props> {
     super(props);
 	this.state = {
       refreshing: false,
-      dataSource: ds.cloneWithRows([{userId: 'aasdasdasdasdasdsd', id: 'asd', title: 'asasdasdasdasdd', completed: false}]), //TODO nie pokazywanie tego przy braku internetu
+      dataSource: ds.cloneWithRows([]),
     };
   }
   
-  componentWillMount() {
-    this.fetchData();
+  componentWillMount = async() => {
+    this.getShoppingCart();
+  }
+  
+  getShoppingCart = async() => {
+    try {
+      const value = await AsyncStorage.getItem('shoppingCart');
+      this.setState({ dataSource: ds.cloneWithRows(JSON.parse(value).contents) });
+	  return;
+    } catch (error) {}
+  }
+  
+  removeFromShoppingCart = async(id) => {
+    try {
+      const value = await AsyncStorage.getItem('shoppingCart');
+	  let shoppingCart = JSON.parse(value);
+	  shoppingCart.contents.splice(id,1);
+	  //shoppingCart = { contents:[] };
+      await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+	  this._onRefresh();
+    } catch (error) {
+      alert('Błąd AsyncStorage koszyka!');
+    }
   }
 
   _onRefresh = () => {
     this.setState({refreshing: true});
-    this.fetchData().then(() => {
+    this.getShoppingCart().then(() => {
       this.setState({refreshing: false});
     });
   }
 
-  fetchData = async() => {
-    fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(response => response.json())
-    .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
-    .catch((error) => {
-      alert('Błąd podczas pobierania danych koszyka.\nSprawdź połączenie z internetem!');
-    });
-  }
-  
-  goToMakingAnOrder = (props) => {
+  goToScreen = (screen, props) => {
     Navigation.push(this.props.componentId, {
       component: {
-        name: 'MakingAnOrder',
+        name: screen,
         passProps: {
           props: props
         },
       }
     });
   }
-  
-  addToShoppingCart = async(product) => {
-    try {
-      let shoppingCart;
-      const value = await AsyncStorage.getItem('shoppingCart');
-      if (value == null) {
-        shoppingCart = { contents:[] };
-      } else {
-		shoppingCart = JSON.parse(value);
-	  }
-	  shoppingCart.contents.push({'id':product});
-      await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
-    } catch (error) {
-      alert('Błąd AsyncStorage koszyka!');
-    }
-  }
 
   render() {
+	if(this.state.dataSource._dataBlob.s1.length < 1) {
+	  return (
+		<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+		  <Text>Koszyk jest pusty</Text>
+		</View>
+		);
+	}
     return (
       <View style={styles.container}>
         <View style={{flex: 7, backgroundColor: '#F5FCFF'}}>
@@ -80,20 +83,20 @@ export default class ShoppingCart extends Component<Props> {
             renderRow={(data) =>
               <View style={styles.row}>
                 <View style={{flex: 3}}>
-                  <TouchableOpacity onPress={() => this.goToDescription('TODO - id tego produktu czy coś')}>
+                  <TouchableOpacity onPress={() => this.goToScreen('ProductDescription', data)}>
                     <View style={{flexDirection: 'row'}}>
                       <View style={{flex: 1}}>
                         <Image style={styles.image} source={require('../assets/phone.png')}/>
                       </View>
                       <View style={{flex: 2, justifyContent: 'center'}}>
-                        <Text>{data.title}</Text>
+                        <Text>{data.name}</Text>
                         <Text>Cena: {data.id} zł</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                 </View>
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                  <TouchableOpacity onPress={() => alert('Usunięto z koszyka.')}>
+                  <TouchableOpacity onPress={() => this.removeFromShoppingCart(data.id)}>
                     <Image source={require('../assets/trash.png')} style={{height: 32, width: 32}}/>
                   </TouchableOpacity>
                 </View>
@@ -109,7 +112,7 @@ export default class ShoppingCart extends Component<Props> {
         </View>
         <View style={{flex: 2}}>
           <Text>Suma zamówienia:</Text>
-		  <TouchableOpacity onPress={() => this.goToMakingAnOrder('propsy jakieś')}>
+		  <TouchableOpacity onPress={() => this.goToScreen('MakingAnOrder', 'propsy jakieś')}>
             <Text style={{padding: 10, backgroundColor: 'green'}}>Dalej</Text>
           </TouchableOpacity>
         </View>
