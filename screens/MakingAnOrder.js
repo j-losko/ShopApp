@@ -3,9 +3,6 @@ import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'r
 import {Navigation} from 'react-native-navigation';
 import {RadioButton} from '../components/RadioButton.js'
 
-//równo radio buttons mają być
-
-
 type Props = {};
 export default class MakingAnOrder extends Component<Props> {
   static options(passProps) {
