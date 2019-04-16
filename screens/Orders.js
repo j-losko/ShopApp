@@ -35,7 +35,7 @@ export default class Orders extends Component<Props> {
     });
   }
 
-  fetchData = () => {
+  fetchData = async() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
     .then(response => response.json())
     .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
