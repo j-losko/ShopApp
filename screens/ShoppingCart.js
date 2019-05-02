@@ -40,8 +40,12 @@ export default class ShoppingCart extends Component<Props> {
     try {
       const value = await AsyncStorage.getItem('shoppingCart');
       let shoppingCart = JSON.parse(value);
-      shoppingCart.contents.splice(id,1);
-      //shoppingCart = { contents:[] };
+      for(let i = 0; i < shoppingCart.contents.length; i++){ 
+        if(shoppingCart.contents[i].id === id) {
+          shoppingCart.contents.splice(i, 1);
+          break;
+        }
+      }
       await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
       this._onRefresh();
     } catch (error) {
@@ -100,11 +104,11 @@ export default class ShoppingCart extends Component<Props> {
                   <TouchableOpacity onPress={() => this.goToProductDetails('ProductDescription', data)}>
                     <View style={{flexDirection: 'row'}}>
                       <View style={{flex: 1}}>
-                        <Image style={styles.image} source={require('../assets/phone.png')}/>
+                        <Image style={styles.image} source={{uri: data.image}}/>
                       </View>
                       <View style={{flex: 2, justifyContent: 'center'}}>
                         <Text>{data.name}</Text>
-                        <Text>Cena: {data.id} zł</Text>
+                        <Text>Cena: {data.price} zł</Text>
                       </View>
                     </View>
                   </TouchableOpacity>

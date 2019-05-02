@@ -39,7 +39,12 @@ export default class ProductDescription extends Component<Props> {
     try {
       const value = await AsyncStorage.getItem('shoppingCart');
       let shoppingCart = JSON.parse(value);
-      shoppingCart.contents.splice(this.props.product.id,1);
+      for(let i = 0; i < shoppingCart.contents.length; i++){ 
+        if(shoppingCart.contents[i].id === this.props.product.id) {
+          shoppingCart.contents.splice(i, 1);
+          break;
+        }
+      }
       await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
       this.props.refreshCallback();
       Navigation.pop(this.props.componentId);
@@ -70,7 +75,7 @@ export default class ProductDescription extends Component<Props> {
       <View style={styles.container}>
         <View style={{flex: 3, flexDirection: 'row'}}>
           <View style={{flex: 1}}>
-            <Image style={styles.image} source={require('../assets/phone.png')}/>
+            <Image style={styles.image} source={{uri: this.props.product.image}}/>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text>{this.props.product.name}</Text>
