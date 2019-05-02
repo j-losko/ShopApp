@@ -134,6 +134,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
-	margin: 2
+    margin: 2
   },
 });
