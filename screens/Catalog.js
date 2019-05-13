@@ -111,7 +111,7 @@ export default class Catalog extends Component<Props> {
                   <TouchableOpacity onPress={() => this.goToDescription(data)}>
                     <View style={{flexDirection: 'row'}}>
                       <View style={{flex: 1}}>
-						<Image style={styles.image} source={{uri: data.image}}/>
+                        <Image style={styles.image} source={{uri: data.image}}/>
                       </View>
                       <View style={{flex: 2, justifyContent: 'center'}}>
                         <Text>{data.name}</Text>

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {RadioButton} from '../components/RadioButton.js'
+import AsyncStorage from '@react-native-community/async-storage';
 
 type Props = {};
 export default class MakingAnOrder extends Component<Props> {
@@ -28,11 +29,31 @@ export default class MakingAnOrder extends Component<Props> {
     };
   }
   
-  makeAnOrder = () => {
+  makeAnOrder = async () => {
     if( this.state.deliveryMethod != '' && this.state.paymentMethod != '' &&
         this.state.name != '' && this.state.postalCode != '' &&
         this.state.town != '' && this.state.address != '' ) {
-      alert('Złożone zamówienie!');
+      try {
+        const value = await AsyncStorage.getItem('shoppingCart');
+        let shoppingCart = JSON.parse(value);
+        let products = [];
+        for(let i = 0; i < shoppingCart.contents.length; i++){ 
+          products.push({"productId": shoppingCart.contents[i].id, "amount": 1});
+        }
+        await fetch('http://virtserver.swaggerhub.com/Har877/Sklep_Internetowy_ReactNative_PSM/1.0.0/orders/makeOrder', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({"products": products}),
+        });
+        await AsyncStorage.setItem('shoppingCart', JSON.stringify({ contents:[] }));
+        this.props.refreshCallback();
+        Navigation.pop(this.props.componentId);
+      } catch (error) {
+        alert('Błąd podczas wysyłania zamówienia.\nSprawdź połączenie z internetem!');
+      }
     } else {
       alert('Wypełnij wszystkie pola!');
     }

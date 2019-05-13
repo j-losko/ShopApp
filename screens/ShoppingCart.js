@@ -60,12 +60,12 @@ export default class ShoppingCart extends Component<Props> {
     });
   }
 
-  goToScreen = (screen, props) => {
+  goToMakingAnOrder = () => {
     Navigation.push(this.props.componentId, {
       component: {
-        name: screen,
+        name: 'MakingAnOrder',
         passProps: {
-          product: props,
+		  refreshCallback: () => this._onRefresh()
         },
       }
     });
@@ -130,7 +130,7 @@ export default class ShoppingCart extends Component<Props> {
         </View>
         <View style={{flex: 2}}>
           <Text>Suma zamówienia:</Text>
-          <TouchableOpacity onPress={() => this.goToScreen('MakingAnOrder', 'propsy jakieś')}>
+          <TouchableOpacity onPress={() => this.goToMakingAnOrder()}>
             <Text style={{padding: 10, backgroundColor: 'green'}}>Dalej</Text>
           </TouchableOpacity>
         </View>
