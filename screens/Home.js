@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'lightblue',
     margin: 10,
+    borderRadius: 10
   },
   buttonText: {
     textAlign: 'center',

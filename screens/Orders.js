@@ -84,14 +84,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     backgroundColor: '#F5FCFF',
-    marginHorizontal: 30,
+    marginHorizontal: 30
   },
   row: {
     borderWidth: 1,
     borderColor: 'gray',
     padding: 5,
     marginVertical: 5,
+    borderRadius: 5,
+    backgroundColor: '#FBFDFC'
   }
 });

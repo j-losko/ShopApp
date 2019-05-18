@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, ListView, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Image, ListView, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -38,7 +38,7 @@ export default class Catalog extends Component<Props> {
     Navigation.events().bindComponent(this);
     this.state = {
       refreshing: false,
-      dataSource: ds.cloneWithRows([{id: 'placeholder', name: 'placeholder', price: 'placeholder', image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAwBQTFRF7c5J78kt+/Xm78lQ6stH5LI36bQh6rcf7sQp671G89ZZ8c9V8c5U9+u27MhJ/Pjv9txf8uCx57c937Ay5L1n58Nb67si8tVZ5sA68tJX/Pfr7dF58tBG9d5e8+Gc6chN6LM+7spN1pos6rYs6L8+47hE7cNG6bQc9uFj7sMn4rc17cMx3atG8duj+O7B686H7cAl7cEm7sRM26cq/vz5/v767NFY7tJM78Yq8s8y3agt9dte6sVD/vz15bY59Nlb8txY9+y86LpA5LxL67pE7L5H05Ai2Z4m58Vz89RI7dKr+/XY8Ms68dx/6sZE7sRCzIEN0YwZ67wi6rk27L4k9NZB4rAz7L0j5rM66bMb682a5sJG6LEm3asy3q0w3q026sqC8cxJ6bYd685U5a457cIn7MBJ8tZW7c1I7c5K7cQ18Msu/v3678tQ3aMq7tNe6chu6rgg79VN8tNH8c0w57Q83akq7dBb9Nld9d5g6cdC8dyb675F/v327NB6////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/LvB3QAAAMFJREFUeNpiqIcAbz0ogwFKm7GgCjgyZMihCLCkc0nkIAnIMVRw2UhDBGp5fcurGOyLfbhVtJwLdJkY8oscZCsFPBk5spiNaoTC4hnqk801Qi2zLQyD2NlcWWP5GepN5TOtSxg1QwrV01itpECG2kaLy3AYiCWxcRozQWyp9pNMDWePDI4QgVpbx5eo7a+mHFOqAxUQVeRhdrLjdFFQggqo5tqVeSS456UEQgWE4/RBboxyC4AKCEI9Wu9lUl8PEGAAV7NY4hyx8voAAAAASUVORK5CYII='}]), //TODO nie pokazywanie tego przy braku internetu - po prostu []
+      dataSource: ds.cloneWithRows([]),
       search: ''
     };
   }
@@ -59,7 +59,7 @@ export default class Catalog extends Component<Props> {
     .then(response => response.json())
     .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
     .catch((error) => {
-      alert('Błąd podczas pobierania katalogu produktów.\nSprawdź połączenie z internetem!');
+      alert(error.message);
     });
   }
   
@@ -87,23 +87,16 @@ export default class Catalog extends Component<Props> {
       shoppingCart.contents.push({'id': product.id, 'name': product.name, 'price': product.price, 'description': product.name, 'image': product.image}); //id ma być w stringu
       await AsyncStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
     } catch (error) {
-      alert('Błąd AsyncStorage koszyka!');
+      alert(error.message);
     }
   }
   
   render() {
     return (
       <View style={styles.container}>
-        <View style={{flex: 1}}>
-          <TextInput
-            placeholder='Szukaj produktu'
-            style={styles.searchInput}
-            onChangeText={(search) => this.setState({search})}
-            value={this.state.search}
-          />
-        </View>
         <View style={{flex: 8, backgroundColor: '#F5FCFF'}}>
           <ListView
+            enableEmptySections={true}
             dataSource={this.state.dataSource}
             renderRow={(data) =>
               <View style={styles.row}>
@@ -148,19 +141,15 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginHorizontal: 20,
   },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1
-  },
   row: {
     flex: 1,
     flexDirection: 'row',
     margin: 5,
-    backgroundColor: 'lightgray',
+    backgroundColor: '#EBEBEB',
     paddingVertical: 4,
     borderWidth: 1,
-    borderColor: 'gray'
+    borderColor: 'gray',
+    borderRadius: 10
   },
   image: {
     flex: 1,

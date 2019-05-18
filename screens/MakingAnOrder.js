@@ -146,7 +146,7 @@ export default class MakingAnOrder extends Component<Props> {
           </View>
           <View style={{flex: 1}}>
             <TouchableOpacity onPress={() => this.makeAnOrder()}>
-              <Text style={{padding: 10, backgroundColor: 'green'}}>Złóż i opłać zamówienie</Text>
+              <Text style={styles.button}>Złóż i opłać zamówienie</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginVertical: 5
+    marginVertical: 5,
+    borderRadius: 3
   },
   radioButton: {
     flexDirection: 'row',
@@ -173,4 +174,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 2
   },
+  button: {
+    padding: 12,
+    backgroundColor: '#BDFFBD',
+    borderRadius: 10,
+    textAlign: 'center'
+  }
 });

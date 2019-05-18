@@ -32,7 +32,13 @@ export default class ShoppingCart extends Component<Props> {
   getShoppingCart = async() => {
     try {
       const value = await AsyncStorage.getItem('shoppingCart');
-      this.setState({ dataSource: ds.cloneWithRows(JSON.parse(value).contents) });
+      let products = JSON.parse(value).contents;
+      this.setState({ dataSource: ds.cloneWithRows(products) });
+      let price = 0;
+      for(let i = 0; i < products.length; i++) {
+        price += parseFloat(products[i].price);
+      }
+      this.setState({'price': price});
     } catch (error) {}
   }
   
@@ -129,9 +135,9 @@ export default class ShoppingCart extends Component<Props> {
           />
         </View>
         <View style={{flex: 2}}>
-          <Text>Suma zamówienia:</Text>
+          <Text style={{padding: 15, textAlign: 'center'}}>Suma zamówienia: {this.state.price} zł</Text>
           <TouchableOpacity onPress={() => this.goToMakingAnOrder()}>
-            <Text style={{padding: 10, backgroundColor: 'green'}}>Dalej</Text>
+            <Text style={styles.button}>Dalej</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -147,19 +153,26 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginHorizontal: 20,
   },
-    row: {
+  row: {
     flex: 1,
     flexDirection: 'row',
     margin: 5,
-    backgroundColor: 'lightgray',
+    backgroundColor: '#EBEBEB',
     paddingVertical: 4,
     borderWidth: 1,
-    borderColor: 'gray'
+    borderColor: 'gray',
+    borderRadius: 5
   },
   image: {
     flex: 1,
     width: 64,
     height: 64,
     resizeMode: 'contain'
+  },
+  button: {
+    padding: 12,
+    backgroundColor: '#BDFFBD',
+    borderRadius: 10,
+    textAlign: 'center'
   }
 });
