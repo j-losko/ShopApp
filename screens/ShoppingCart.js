@@ -65,7 +65,7 @@ export default class ShoppingCart extends Component<Props> {
       component: {
         name: 'MakingAnOrder',
         passProps: {
-		  refreshCallback: () => this._onRefresh()
+          refreshCallback: () => this._onRefresh()
         },
       }
     });

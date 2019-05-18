@@ -34,11 +34,18 @@ export default class MakingAnOrder extends Component<Props> {
         this.state.name != '' && this.state.postalCode != '' &&
         this.state.town != '' && this.state.address != '' ) {
       try {
+        this.setState({'date': new Date().toDateString()});
         const value = await AsyncStorage.getItem('shoppingCart');
         let shoppingCart = JSON.parse(value);
         let products = [];
-        for(let i = 0; i < shoppingCart.contents.length; i++){ 
-          products.push({"productId": shoppingCart.contents[i].id, "amount": 1});
+        let index;
+        for(let i = 0; i < shoppingCart.contents.length; i++){
+          index = products.findIndex(x => x.productId === shoppingCart.contents[i].id);
+          if(index > -1) {
+            products[index] = {'productId': products[index].productId, 'amount': products[index].amount + 1};
+          } else {
+            products.push({'productId': shoppingCart.contents[i].id, 'amount': 1});
+          }
         }
         await fetch('http://virtserver.swaggerhub.com/Har877/Sklep_Internetowy_ReactNative_PSM/1.0.0/orders/makeOrder', {
           method: 'POST',
@@ -49,10 +56,19 @@ export default class MakingAnOrder extends Component<Props> {
           body: JSON.stringify({"products": products}),
         });
         await AsyncStorage.setItem('shoppingCart', JSON.stringify({ contents:[] }));
+        
+        let orders = await AsyncStorage.getItem('orders');
+        if(orders == null) {
+          orders = [];
+        } else {
+          orders = JSON.parse(orders);
+        }
+        orders.push({'orderData': this.state, 'orderProducts': products});
+        await AsyncStorage.setItem('orders', JSON.stringify(orders));
         this.props.refreshCallback();
         Navigation.pop(this.props.componentId);
       } catch (error) {
-        alert('Błąd podczas wysyłania zamówienia.\nSprawdź połączenie z internetem!');
+        alert(error.message);
       }
     } else {
       alert('Wypełnij wszystkie pola!');

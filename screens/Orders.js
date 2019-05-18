@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, ListView, RefreshControl} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -20,7 +21,7 @@ export default class Orders extends Component<Props> {
     super(props);
     this.state = {
       refreshing: false,
-      dataSource: ds.cloneWithRows([{userId: 'placeholder', id: 'placeholder', title: 'placeholder', completed: false}]) //placeholder
+      dataSource: ds.cloneWithRows([])
     };
   }
   
@@ -36,24 +37,35 @@ export default class Orders extends Component<Props> {
   }
 
   fetchData = async() => {
-    fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(response => response.json())
-    .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
-    .catch((error) => {
-      alert('Błąd podczas wysyłania wyniku.\nSprawdź połączenie z internetem!');
-    });
+    try {
+      let orders = await AsyncStorage.getItem('orders');
+      if(orders == null) {
+        orders = [];
+      }
+      orders = JSON.parse(orders);
+      this.setState({ dataSource: ds.cloneWithRows(orders) });
+    }
+    catch(error) {
+      alert(error.message);
+    }
   }
   
   render() {
     return (
       <View style={styles.container}>
         <ListView
+          enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={(data) =>
             <View style={styles.row}>
-              <Text>Zamówienie nr: {data.id}</Text>
-              <Text>Suma zamówienia: {data.id} zł</Text>
-              <Text>Data zamówienia: {data.title}</Text>
+              <Text>Data zamówienia: {data.orderData.date}</Text>
+              <Text>Sposób dostawy: {data.orderData.deliveryMethod}</Text>
+              <Text>Sposób zapłaty: {data.orderData.paymentMethod}</Text>
+              <Text>Imię i nazwisko: {data.orderData.name}</Text>
+              <Text>Kod pocztowy: {data.orderData.postalCode}</Text>
+              <Text>Miejscowość: {data.orderData.town}</Text>
+              <Text>Adres: {data.orderData.address}</Text>
+              <Text>Adres 2: {data.orderData.address2}</Text>
             </View>
           }
           refreshControl={
