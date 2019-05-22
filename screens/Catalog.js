@@ -55,9 +55,9 @@ export default class Catalog extends Component<Props> {
   }
 
   fetchData = async() => {
-    fetch('http://virtserver.swaggerhub.com/Har877/Sklep_Internetowy_ReactNative_PSM/1.0.0/products/getProducts')
+    fetch('https://online-shop-psm.herokuapp.com/products/getProducts')
     .then(response => response.json())
-    .then(json => this.setState({ dataSource: ds.cloneWithRows(json) }))
+    .then(json => this.setState({ dataSource: ds.cloneWithRows(json.products) }))
     .catch((error) => {
       alert(error.message);
     });

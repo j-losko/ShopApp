@@ -47,7 +47,7 @@ export default class MakingAnOrder extends Component<Props> {
             products.push({'productId': shoppingCart.contents[i].id, 'amount': 1});
           }
         }
-        await fetch('http://virtserver.swaggerhub.com/Har877/Sklep_Internetowy_ReactNative_PSM/1.0.0/orders/makeOrder', {
+        await fetch('https://online-shop-psm.herokuapp.com/orders/makeOrder', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
